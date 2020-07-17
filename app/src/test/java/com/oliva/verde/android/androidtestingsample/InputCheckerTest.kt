@@ -10,9 +10,11 @@ import org.hamcrest.CoreMatchers.`is`
 
 
 class InputCheckerTest {
+    lateinit var target : InputChecker
 
     @Before
     fun setUp() {
+        target = InputChecker()
     }
 
     @After
@@ -21,8 +23,19 @@ class InputCheckerTest {
 
     @Test
     fun isValid() {
-        val target = InputChecker()
         val actual = target.isValid("foo")
         assertThat(actual, `is`(true))
     }
-}
+
+    @Test
+    fun isValid_givenLessThan3_returnsFalse() {
+        val actual = target.isValid("ab")
+        assertThat(actual, `is`(false))
+    }
+
+    @Test
+    fun isValid_givenAlphaNumeric_returnsTrue() {
+        val actual = target.isValid("abc123")
+        assertThat(actual, `is`(true))
+    }
+ }
