@@ -1,6 +1,7 @@
 package com.oliva.verde.android.androidtestingsample
 
 
+import org.assertj.core.api.Assertions.*
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -49,7 +50,8 @@ class InputCheckerTest {
     @Test
     fun isValid_givenAlphaNumeric_returnsTrue() {
         val actual = target.isValid("abc123")
-        assertThat(actual, `is`(true))
+        // AssertJを用いたアサーション
+        assertThat(actual).isTrue()
     }
 
     @Test
@@ -69,4 +71,41 @@ class InputCheckerTest {
     fun temporarilySkipThisTest() {
         // 略
     }
+
+    // AssertJを用いたアサーションサンプル
+    // 文字列のアサーション
+    @Test
+    fun AssertJSampleTesting() {
+        assertThat("TOKYO")
+            .`as`("TEXT CHECK TOKYO")
+            .isEqualTo("TOKYO")
+            .isEqualToIgnoringCase("tokyo")
+            .isNotEqualTo("KYOTO")
+            .isNotBlank()
+            .startsWith("TO")
+            .endsWith("YO")
+            .contains("OKY")
+            .matches("[A-Z]{5}")
+            .isInstanceOf(String::class.java)
+    }
+
+    // フィルタリング
+    data class BallTeam(val name : String, val city : String, val stadium : String)
+    val targetList = listOf(
+        BallTeam("Giants", "San Francisco", "AT&T Park"),
+        BallTeam("Dodgers", "Los Angels", "Dodger Stadium"),
+        BallTeam("Angels", "Los Angels", "Angel Stadium"),
+        BallTeam("Athletics", "Oakland", "Oakland Coliseum"),
+        BallTeam("Padres", "San Diego", "Petco Park")
+    )
+
+    @Test
+    fun targetList_filter_returnsTrue() {
+        assertThat(targetList)
+            .filteredOn { team -> team.city.startsWith("San") }
+            .filteredOn { team -> team.city.endsWith("Francisco") }
+            .extracting("name", String::class.java) // nameプロパティを取り出す
+            .containsExactly("Giants")
+    }
+
  }
