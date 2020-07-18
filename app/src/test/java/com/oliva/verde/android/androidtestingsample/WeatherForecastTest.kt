@@ -8,22 +8,23 @@ import org.junit.Before
 
 class WeatherForecastTest {
     lateinit var weatherForecast: WeatherForecast
-    lateinit var recorder: MockWeatherRecorder
+    lateinit var formatter: SpyWeatherFormatter
 
     @Before
     fun setUp() {
         val satellite = Satellite()
-        recorder = MockWeatherRecorder()
-        weatherForecast = WeatherForecast(satellite, recorder)
+        val recorder = WeatherRecorder()
+        formatter = SpyWeatherFormatter()
+        weatherForecast = WeatherForecast(satellite, recorder, formatter)
     }
 
     @Test
     fun recordCurrentWeather_assertCalled() {
         weatherForecast.recordCurrentWeather()
-        val isCalled = recorder.isCalled
+        val isCalled = formatter.isCalled
         assertThat(isCalled).isTrue()
 
-        val weather = recorder.weather
+        val weather = formatter.weather
         assertThat(weather)
             .isIn(Weather.SUNNY, Weather.CLOUDY, Weather.RAINY)
     }

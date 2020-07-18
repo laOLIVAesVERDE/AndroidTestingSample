@@ -12,7 +12,9 @@ class StubSatellite(val anyWeather : Weather) : Satellite() {
     }
 }
 
-class WeatherForecast(val satellite: Satellite, val recorder: WeatherRecorder) {
+class WeatherForecast(val satellite: Satellite,
+                      val recorder: WeatherRecorder,
+                      val formatter : WeatherFormatter) {
 
     fun shouldBringUmbrella(): Boolean {
         val weather = satellite.getWeather()
@@ -24,14 +26,30 @@ class WeatherForecast(val satellite: Satellite, val recorder: WeatherRecorder) {
 
     fun recordCurrentWeather() {
         val weather = satellite.getWeather()
-        recorder.record(weather)
+        val formatted = formatter.format(weather)
+        recorder.record(formatted)
     }
 
 }
 
-open class WeatherRecorder {
-    open fun record(weather: Weather) {
+open class WeatherFormatter {
+    open fun format(weather: Weather) : String = "Weather is ${weather}"
+}
 
+open class WeatherRecorder {
+    open fun record(weather: String) {
+
+    }
+}
+
+class SpyWeatherFormatter : WeatherFormatter() {
+    var weather : Weather? = null
+    var isCalled = false
+
+    override fun format(weather: Weather): String {
+        this.weather = weather
+        isCalled = true
+        return super.format(weather)
     }
 }
 
@@ -39,8 +57,7 @@ class MockWeatherRecorder : WeatherRecorder() {
     var weather : Weather? = null
     var isCalled = false
 
-    override fun record(weather: Weather) {
-        this.weather = weather
+    override fun record(weather: String) {
         isCalled = true
     }
 }
