@@ -1,6 +1,7 @@
 package com.oliva.verde.android.androidtestingsample
 
 
+import androidx.test.runner.AndroidJUnit4
 import org.assertj.core.api.Assertions.*
 import org.junit.After
 import org.junit.Before
@@ -9,8 +10,15 @@ import org.junit.Test
 import org.junit.Assert.*
 import org.hamcrest.CoreMatchers.`is`
 import org.junit.Ignore
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
+import java.lang.IllegalArgumentException
 
 
+@Config(minSdk = 26, maxSdk = 27)
+// テストランナーにRobolectricを設定
+@RunWith(RobolectricTestRunner::class)
 class InputCheckerTest {
     lateinit var target : InputChecker
 
@@ -61,9 +69,11 @@ class InputCheckerTest {
     }
 
     // @Test(expected = 例外クラス) : テスト対象メソッドが意図通り例外を発生させたかを検証
-    @Test(expected = IllegalArgumentException::class)
-    fun isValid_givenNull_throwsIllegalArgumentException() {
-        target.isValid(null)
+    @Test
+    fun isValid_givenBlank_throwsIllegalArgumentException() {
+        assertThatExceptionOfType(IllegalArgumentException::class.java)
+            .isThrownBy { target.isValid("") }
+            .withMessage("Cannot be blank")
     }
 
     @Ignore("テスト対象が仮実装なので一時的にスキップ")
