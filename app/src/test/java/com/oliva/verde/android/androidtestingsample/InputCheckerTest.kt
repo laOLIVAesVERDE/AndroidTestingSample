@@ -1,6 +1,7 @@
 package com.oliva.verde.android.androidtestingsample
 
 
+import androidx.test.runner.AndroidJUnit4
 import org.assertj.core.api.Assertions.*
 import org.junit.After
 import org.junit.Before
